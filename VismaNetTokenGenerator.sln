@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VismaNetTokenDemo", "VismaNetTokenDemo\VismaNetTokenDemo.csproj", "{47E379D3-3370-4835-B58F-114196C048B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VismaNetTokenGenerator", "VismaNetTokenGenerator\VismaNetTokenGenerator.csproj", "{47E379D3-3370-4835-B58F-114196C048B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3C135F9-7831-4721-803D-FCF41354CCEF}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
