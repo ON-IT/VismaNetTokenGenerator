@@ -80,7 +80,7 @@ namespace VismaNetTokenGenerator
                 var token = await VismaNet.GetTokenUsingOAuth(clientId, clientSecret, code, callbackUrl);
                 var contexts = await VismaNet.GetContextsForToken(token);
                 var builder = new StringBuilder();
-                builder.AppendLine($"<p><strong>Token</strong> {token}</p>");
+                builder.AppendLine($"<pre><strong>Token:</strong> {token}</p>");
                 builder.AppendLine("<p><strong>Available contexts</strong></p>");
                 builder.AppendLine("<ul>");
                 foreach (var ctx in contexts)
