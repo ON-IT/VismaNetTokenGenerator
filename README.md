@@ -1,8 +1,8 @@
-#### Visma.net token creator ####
+# Visma.net token creator #
 
 Have Visma.net create a token for you and send it by email. This way you can send your clients a link and get a token with a list of context by email.
 
-### Parameters
+## Parameters
 
 You'll have to set these parameters as soon as you've installed the app in Azure.
 
