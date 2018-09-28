@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -41,16 +42,30 @@ namespace VismaNetTokenGenerator
             {
                 var token = await VismaNet.GetTokenUsingOAuth(clientId, clientSecret, code, callbackUrl);
                 var contexts = await VismaNet.GetContextsForToken(token);
+                var builder = new StringBuilder();
+                builder.AppendLine($"<p><strong>Token:</strong> {token}</p>");
+                builder.AppendLine("<p><strong>Available contexts:</strong></p>");
+                builder.AppendLine("<ul>");
+                foreach (var ctx in contexts)
+                {
+                    builder.AppendLine($"<li>{ctx.name} ({ctx.id})</li>");
+                }
+
+                builder.AppendLine("</ul>");
+                try
+                {
+                    dynamic vismaNet = new VismaNet(0, token);
+                    var userInfo = await vismaNet.context.userdetails.Get();
+                    var user = userInfo[0];
+                    builder.AppendLine($"<p>Created by {user.firstName} {user.lastName} (<a href='mailto:{user.emailAddress}'>{user.emailAddress}</a>)</p>");
+                }
+                catch (Exception e)
+                {
+                    log.LogError(e, "Could not fetch user details");
+                }
+
                 if (!string.IsNullOrEmpty(Config.GetValue<string>("AzureWebJobsSendGridApiKey")))
                 {
-                    var builder = new StringBuilder();
-                    builder.AppendLine($"Token: {token}");
-                    builder.AppendLine("Available contexts:");
-                    foreach (var ctx in contexts)
-                    {
-                        builder.AppendLine($"{ctx.name} ({ctx.id})");
-                    }
-
                     await emailQueue.AddAsync(builder.ToString());
 
                     return new ContentResult
@@ -60,31 +75,23 @@ namespace VismaNetTokenGenerator
                         StatusCode = 200
                     };
                 }
-                else
+
+                return new ContentResult
                 {
-                    var builder = new StringBuilder();
-                    builder.AppendLine("<h1>Thank you</h1>");
-                    builder.AppendLine($"<p><strong>Token:</strong> {token}</p>");
-                    builder.AppendLine("<p><strong>Available contexts:</strong></p><ul>");
-                    foreach (var ctx in contexts)
-                    {
-                        builder.AppendLine($"<li>{ctx.name} ({ctx.id})</li>");
-                    }
-
-                    builder.AppendLine("</ul>");
-
-                    return new ContentResult
-                    {
-                        Content = builder.ToString(),
-                        ContentType = "text/html",
-                        StatusCode = 200
-                    };
-                }
+                    Content = $"<h1>Token created</h1>{builder}",
+                    ContentType = "text/html",
+                    StatusCode = 200
+                };
             }
             catch (Exception e)
             {
                 log.LogError(e, e.Message);
-                return new InternalServerErrorResult();
+                return new ContentResult
+                {
+                    Content = $"<h1>Unable to create token</h1><p>{e.Message}</p>",
+                    ContentType = "text/html",
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
             }
         }
 
@@ -109,7 +116,7 @@ namespace VismaNetTokenGenerator
         {
             message = new SendGridMessage
             {
-                PlainTextContent = emailContent
+                HtmlContent = emailContent
             };
         }
     }
