@@ -6,6 +6,8 @@ Have Visma.net create a token for you and send it by email. This way you can sen
 
 You'll have to set these parameters as soon as you've installed the app in Azure.
 
+| AppSetting | Description |
+| ---------- | ------------ |
 | client-id | The client Id provided by Visma | 
 | client-secret | The client secret provided by Visma |
 | callback-url | The url to https://[your-app-name].azurewebsites.net/api/callback |
