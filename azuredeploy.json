@@ -19,6 +19,13 @@
       "metadata": {
         "description": "Storage Account type"
       }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[parameters('location')]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
     }
   },
   "variables": {
