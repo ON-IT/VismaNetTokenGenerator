@@ -132,11 +132,11 @@
             },
             {
               "name": "VismaNetClientId",
-              "value": "[parameter('VismaNetClientId')]"
+              "value": "[parameters('VismaNetClientId')]"
             },
             {
               "name": "VismaNetClientSecret",
-              "value": "[parameter('VismaNetClientSecret')]"
+              "value": "[parameters('VismaNetClientSecret')]"
             },
             {
               "name": "VismaNetCallbackUrl",
@@ -144,19 +144,19 @@
             },
             {
               "name": "AzureWebJobsSendGridApiKey",
-              "value": "[parameter('SendGridApiKey')]"
+              "value": "[parameters('SendGridApiKey')]"
             },
             {
               "name": "SendGridFrom",
-              "value": "[parameter('SendGridFrom')]"
+              "value": "[parameters('SendGridFrom')]"
             },
             {
               "name": "SendGridTo",
-              "value": "[parameter('SendGridTo')]"
+              "value": "[parameters('SendGridTo')]"
             },
             {
               "name": "SendGridSubject",
-              "value": "[parameter('SendGridSubject')]"
+              "value": "[parameters('SendGridSubject')]"
             }
           ]
         }
