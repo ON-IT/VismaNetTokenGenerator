@@ -30,12 +30,12 @@ namespace VismaNetTokenGenerator
             [Queue(SendGridQueue)] IAsyncCollector<string> emailQueue,
             ILogger log)
         {
-            var clientId = Config.GetValue<string>("client-id") ??
-                           throw new InvalidArgumentsException("client-id is missing");
-            var clientSecret = Config.GetValue<string>("client-secret") ??
-                               throw new InvalidArgumentsException("client-secret is missing");
-            var callbackUrl = Config.GetValue<string>("callback-url") ??
-                              throw new InvalidArgumentsException("callback-url is missing");
+            var clientId = Config.GetValue<string>("VismaNetClientId") ??
+                           throw new InvalidArgumentsException("VismaNetClientId is missing");
+            var clientSecret = Config.GetValue<string>("VismaNetClientSecret") ??
+                               throw new InvalidArgumentsException("VismaNetClientSecret is missing");
+            var callbackUrl = Config.GetValue<string>("VismaNetCallbackUrl") ??
+                              throw new InvalidArgumentsException("VismaNetCallbackUrl is missing");
             var code = req.GetQueryParameterDictionary()["code"];
             try
             {
@@ -92,10 +92,10 @@ namespace VismaNetTokenGenerator
         public static IActionResult Init([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "init")]
             HttpRequest req, ILogger log)
         {
-            var clientId = Config.GetValue<string>("client-id") ??
+            var clientId = Config.GetValue<string>("VismaNetClientId") ??
                            throw new InvalidArgumentsException("client-id is missing");
-            var callbackUrl = Config.GetValue<string>("callback-url") ??
-                              throw new InvalidArgumentsException("callback-url is missing");
+            var callbackUrl = Config.GetValue<string>("VismaNetCallbackUrl") ??
+                              throw new InvalidArgumentsException("VismaNetCallbackUrl is missing");
             var redirectUrl = VismaNet.GetOAuthUrl(clientId, callbackUrl);
             return new RedirectResult(redirectUrl);
         }
@@ -103,8 +103,8 @@ namespace VismaNetTokenGenerator
         [FunctionName("SendTokenByMail")]
         public static void SendTokenByMail(
             [QueueTrigger(SendGridQueue)] string emailContent,
-            [SendGrid(From = "%sendgrid-from%", Subject = "%sendgrid-subject%",
-                To = "%sendgrid-to%")]
+            [SendGrid(From = "%SendgridFrom%", Subject = "%SendgridSubject%",
+                To = "%SendgridTo%")]
             out SendGridMessage message)
         {
             message = new SendGridMessage
