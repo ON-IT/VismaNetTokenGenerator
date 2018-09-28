@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,14 +91,14 @@ namespace VismaNetTokenGenerator
                 builder.AppendLine("</ul>");
                 try
                 {
-                    dynamic vismaNet = new VismaNet(0, token);
-                    var userInfo = await vismaNet.context.userdetails.Get();
+                    dynamic vismaNet = new VismaNet(contexts.First().id, token);
+                    var userInfo = await vismaNet.context.userdetails.All();
                     var user = userInfo[0];
                     builder.AppendLine($"<p>Created by {user.firstName} {user.lastName} (<a href='mailto:{user.emailAddress}'>{user.emailAddress}</a>)</p>");
                 }
                 catch (Exception e)
                 {
-                    log.LogError(e, "Could not fetch user details");
+                    log.LogError(e, $"Could not fetch user details. {e.Message}");
                 }
 
                 if (!string.IsNullOrEmpty(Config.GetValue<string>("AzureWebJobsSendGridApiKey")))
