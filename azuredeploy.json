@@ -19,6 +19,42 @@
       "metadata": {
         "description": "Storage Account type"
       }
+    },
+    "VismaNetClientId":{
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Client Id provided by Visma"
+      }
+    },
+    "VismaNetClientSecret": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Client Secret provided by Visma"
+      }
+    },
+    "SendGridApiKey": {
+      "type": "string",
+      "metadata": {
+        "description": "ApiKey from Sendgrid.com"
+      }
+    },
+    "SendGridTo": {
+      "type": "string",
+      "metadata": {
+        "description": "E-mail recipient"
+      }
+    },
+    "SendGridFrom": {
+      "type": "string",
+      "metadata": {
+        "description": "E-mail sender"
+      }
+    },
+    "SendGridSubject": {
+      "type": "string",
+      "defaultValue": "Token genererated for Visma.net Integrations"
     }
   },
   "variables": {
@@ -32,7 +68,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
       "apiVersion": "2016-12-01",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "Storage",
       "sku": {
         "name": "[parameters('storageAccountType')]"
@@ -42,7 +78,7 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2015-04-01",
       "name": "[variables('hostingPlanName')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "name": "[variables('hostingPlanName')]",
         "computeMode": "Dynamic",
@@ -53,7 +89,7 @@
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
       "name": "[variables('functionAppName')]",
-      "location": "[parameters('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "functionapp",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
@@ -89,31 +125,31 @@
             },
             {
               "name": "VismaNetClientId",
-              "value": ""
+              "value": "[parameter('VismaNetClientId')]"
             },
             {
               "name": "VismaNetClientSecret",
-              "value": ""
+              "value": "[parameter('VismaNetClientSecret')]"
             },
             {
               "name": "VismaNetCallbackUrl",
-              "value": "[concat('https://', toLower(variables('functionAppName')), '.azurewebsites.net/callback')]"
+              "value": "[concat('https://', toLower(variables('functionAppName')), '.azurewebsites.net/api/callback')]"
             },
             {
               "name": "AzureWebJobsSendGridApiKey",
-              "value": ""
+              "value": "[parameter('SendGridApiKey')]"
             },
             {
               "name": "SendGridFrom",
-              "value": ""
+              "value": "[parameter('SendGridFrom')]"
             },
             {
               "name": "SendGridTo",
-              "value": ""
+              "value": "[parameter('SendGridTo')]"
             },
             {
               "name": "SendGridSubject",
-              "value": "Token genererated for Visma.net Integrations"
+              "value": "[parameter('SendGridSubject')]"
             }
           ]
         }
