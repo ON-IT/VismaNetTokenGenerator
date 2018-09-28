@@ -2,11 +2,11 @@
 
 Have Visma.net create a token for you and send it by email. This way you can send your clients a link and get a token with a list of context by email.
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://azuredeploy.net/?repository=https://github.com/ON-IT/VismaNetTokenGenerator/)
+If you want to create a copy of this service you can fork this repository, create a new Azure Functions App and set it to deploy from Github. Set the Application Settings as described below.
 
-## Parameters
+## Application settings
 
-You'll have to set these parameters as soon as you've installed the app in Azure.
+You'll have to set these application settings as soon as you've installed the app in Azure.
 
 | AppSetting | Description |
 | ---------- | ------------ |
