@@ -104,7 +104,7 @@
             },
             {
               "name": "VismaNetCallbackUrl",
-              "value": "[concat('https://', parameters('appName'), 'azurewebsites.net/api/callback']"
+              "value": "[concat('https://', toLower(variables('functionAppName')), 'azurewebsites.net/api/callback')]"
             },
             {
               "name": "AzureWebJobsSendGridApiKey",
