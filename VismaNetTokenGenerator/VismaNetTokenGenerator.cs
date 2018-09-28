@@ -33,19 +33,22 @@ namespace VismaNetTokenGenerator
                           $"<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">" +
                           $"<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\" integrity=\"sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=\" crossorigin=\"anonymous\" />" +
                           $"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>" +
-                          $"<title>{title}</title>" +
+                          $"<title>Visma.net Integrations Token Generator</title>" +
                           $"</head>" +
                           $"<body>" +
                           $"<div class='container'>" +
                           $"" +
                           $"<div class='row'>" +
                           $"<div class='col s12 m6 offset-m3'>" +
-                          $"<div class='card {background}'>" +
+                          $"<div class='card {background} z-depth-5'>" +
                           $"<div class='card-content white-text'>" +
                           $"<span class='card-title'>{title}</span>" +
                           $"{content}" +
                           $"</div>" +
                           $"</div>" +
+                          $"<a href='https://on-it.no' target='_blank'>" +
+                          $"<img src=\"https://www.on-it.no/wp-content/themes/on-it/style/images/on_it_logo.png\" width=\"100px\" class='right' />" +
+                          $"</a>" +
                           $"</div>" +
                           $"</div>" +
                           $"" +
@@ -108,7 +111,7 @@ namespace VismaNetTokenGenerator
             catch (Exception e)
             {
                 log.LogError(e, e.Message);
-                return CreateTemplatedResult("Unable to create token", $"<p>{e.Message}</p>",
+                return CreateTemplatedResult("<i class='material-icons medium right'>warning</i> Unable to create token", $"<p>{e.Message}</p>",
                     HttpStatusCode.InternalServerError, "red darken-2");
             }
         }
