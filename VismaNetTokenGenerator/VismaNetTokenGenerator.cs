@@ -24,6 +24,39 @@ namespace VismaNetTokenGenerator
             .AddEnvironmentVariables()
             .Build();
 
+        private static ContentResult CreateTemplatedResult(string title, string content, HttpStatusCode status = HttpStatusCode.OK, string background = "blue-grey darken-1")
+        {
+            return new ContentResult()
+            {
+                Content = $"<html>" +
+                          $"<head>" +
+                          $"<link href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" rel=\"stylesheet\">" +
+                          $"<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css\" integrity=\"sha256-OweaP/Ic6rsV+lysfyS4h+LM6sRwuO3euTYfr6M124g=\" crossorigin=\"anonymous\" />" +
+                          $"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>" +
+                          $"<title>{title}</title>" +
+                          $"</head>" +
+                          $"<body>" +
+                          $"<div class='container'>" +
+                          $"" +
+                          $"<div class='row'>" +
+                          $"<div class='col s12 m6 offset-m3'>" +
+                          $"<div class='card {background}'>" +
+                          $"<div class='card-content white-text'>" +
+                          $"<span class='card-title'>{title}</span>" +
+                          $"{content}" +
+                          $"</div>" +
+                          $"</div>" +
+                          $"</div>" +
+                          $"</div>" +
+                          $"" +
+                          $"</div>" +
+                          $"</body>" +
+                          $"</html>",
+                ContentType = "text/html",
+                StatusCode = (int) status
+            };
+        }
+
         [FunctionName("Callback")]
         public static async Task<IActionResult> Callback(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "callback")]
@@ -68,30 +101,15 @@ namespace VismaNetTokenGenerator
                 {
                     await emailQueue.AddAsync(builder.ToString());
 
-                    return new ContentResult
-                    {
-                        Content = "<h1>Thank you</h1><p>Your token was generated and sent to us.</p>",
-                        ContentType = "text/html",
-                        StatusCode = 200
-                    };
+                    return CreateTemplatedResult("Thank you", "<p>Your token was generated and sent to us.</p>", background:"green darken-2");
                 }
-
-                return new ContentResult
-                {
-                    Content = $"<h1>Token created</h1>{builder}",
-                    ContentType = "text/html",
-                    StatusCode = 200
-                };
+                return CreateTemplatedResult("Thank you", $"<p>{builder}</p>", background:"green darken-2");
             }
             catch (Exception e)
             {
                 log.LogError(e, e.Message);
-                return new ContentResult
-                {
-                    Content = $"<h1>Unable to create token</h1><p>{e.Message}</p>",
-                    ContentType = "text/html",
-                    StatusCode = (int)HttpStatusCode.InternalServerError
-                };
+                return CreateTemplatedResult("Unable to create token", $"<p>{e.Message}</p>",
+                    HttpStatusCode.InternalServerError, "red darken-2");
             }
         }
 
