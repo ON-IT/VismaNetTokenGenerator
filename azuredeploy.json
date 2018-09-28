@@ -75,7 +75,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('storageAccountName')]",
       "apiVersion": "2016-12-01",
-      "location": "[parameter('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "Storage",
       "sku": {
         "name": "[parameters('storageAccountType')]"
@@ -85,7 +85,7 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2015-04-01",
       "name": "[variables('hostingPlanName')]",
-      "location": "[parameter('location')]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "name": "[variables('hostingPlanName')]",
         "computeMode": "Dynamic",
@@ -96,7 +96,7 @@
       "apiVersion": "2015-08-01",
       "type": "Microsoft.Web/sites",
       "name": "[variables('functionAppName')]",
-      "location": "[parameter('location')]",
+      "location": "[resourceGroup().location]",
       "kind": "functionapp",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
