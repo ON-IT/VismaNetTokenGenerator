@@ -79,8 +79,8 @@ namespace VismaNetTokenGenerator
                 var token = await VismaNet.GetTokenUsingOAuth(clientId, clientSecret, code, callbackUrl);
                 var contexts = await VismaNet.GetContextsForToken(token);
                 var builder = new StringBuilder();
-                builder.AppendLine($"<p><strong>Token:</strong> {token}</p>");
-                builder.AppendLine("<p><strong>Available contexts:</strong></p>");
+                builder.AppendLine($"<p><strong>Token</strong> {token}</p>");
+                builder.AppendLine("<p><strong>Available contexts</strong></p>");
                 builder.AppendLine("<ul>");
                 foreach (var ctx in contexts)
                 {
@@ -104,9 +104,9 @@ namespace VismaNetTokenGenerator
                 {
                     await emailQueue.AddAsync(builder.ToString());
 
-                    return CreateTemplatedResult("Thank you", "<p>Your token was generated and sent to us.</p>", background:"green darken-2");
+                    return CreateTemplatedResult("Token created successfully", "<p>A token was generated and sent to us.</p>", background:"green darken-2");
                 }
-                return CreateTemplatedResult("Thank you", $"<p>{builder}</p>", background:"green darken-2");
+                return CreateTemplatedResult("Token created successfully", $"<p>{builder}</p>", background:"green darken-2");
             }
             catch (Exception e)
             {
