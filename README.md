@@ -6,7 +6,7 @@ If you want to create a copy of this service you can fork this repository, creat
 
 
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://deploy.azure.com/?repository=https://github.com/ON-IT/VismaNetTokenGenerator)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/ON-IT/VismaNetTokenGenerator/master/azuredeploy.json)
 
 
 ## Application settings
