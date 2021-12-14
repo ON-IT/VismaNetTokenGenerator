@@ -4,6 +4,11 @@ Have Visma.net create a token for you and send it by email. This way you can sen
 
 If you want to create a copy of this service you can fork this repository, create a new Azure Functions App and set it to deploy from Github. Set the Application Settings as described below.
 
+
+
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://deploy.azure.com/?repository=https://github.com/ON-IT/VismaNetTokenGenerator)
+
+
 ## Application settings
 
 You'll have to set these application settings as soon as you've installed the app in Azure.
