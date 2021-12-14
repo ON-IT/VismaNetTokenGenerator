@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -12,10 +7,15 @@ using Microsoft.Extensions.Logging;
 using ONIT.VismaNetApi;
 using ONIT.VismaNetApi.Exceptions;
 using SendGrid.Helpers.Mail;
+using System;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace VismaNetTokenGenerator
 {
-    public static class VismaNetTokenGenerator
+    public class VismaNetTokenGenerator
     {
         private const string SendGridQueue = nameof(SendGridQueue);
 
@@ -24,12 +24,18 @@ namespace VismaNetTokenGenerator
             .AddEnvironmentVariables()
             .Build();
 
+        private readonly ILogger<VismaNetTokenGenerator> log;
+
+        public VismaNetTokenGenerator(ILogger<VismaNetTokenGenerator> log)
+        {
+            this.log = log;
+        }
+
         [FunctionName("Callback")]
-        public static async Task<IActionResult> Callback(
+        public async Task<IActionResult> Callback(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "callback")]
             HttpRequest req,
-            [Queue(SendGridQueue)] IAsyncCollector<string> emailQueue,
-            ILogger log)
+            [Queue(SendGridQueue)] IAsyncCollector<string> emailQueue)
         {
             var clientId = Config.GetValue<string>("VismaNetClientId") ??
                            throw new InvalidArgumentsException("VismaNetClientId is missing");
@@ -37,7 +43,13 @@ namespace VismaNetTokenGenerator
                                throw new InvalidArgumentsException("VismaNetClientSecret is missing");
             var callbackUrl = Config.GetValue<string>("VismaNetCallbackUrl") ??
                               throw new InvalidArgumentsException("VismaNetCallbackUrl is missing");
-            var code = req.GetQueryParameterDictionary()["code"];
+            if (!req.GetQueryParameterDictionary().TryGetValue("code", out var code))
+            {
+                return CreateTemplatedResult(
+                   "<i class='material-icons medium right'>warning</i> Unable to create token", $"<p>Parameter 'code' is missing.</p>",
+                   HttpStatusCode.InternalServerError, "red darken-2");
+            }
+
             try
             {
                 var token = await VismaNet.GetTokenUsingOAuth(clientId, clientSecret, code, callbackUrl);
@@ -86,8 +98,7 @@ namespace VismaNetTokenGenerator
         }
 
         [FunctionName("Init")]
-        public static IActionResult Init([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "init")]
-            HttpRequest req, ILogger log)
+        public IActionResult Init([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "init")] HttpRequest req)
         {
             var clientId = Config.GetValue<string>("VismaNetClientId") ??
                            throw new InvalidArgumentsException("client-id is missing");
@@ -98,7 +109,7 @@ namespace VismaNetTokenGenerator
         }
 
         [FunctionName("SendTokenByMail")]
-        public static void SendTokenByMail(
+        public void SendTokenByMail(
             [QueueTrigger(SendGridQueue)] string emailContent,
             [SendGrid(From = "%SendgridFrom%", Subject = "%SendgridSubject%",
                 To = "%SendgridTo%")]
@@ -143,7 +154,7 @@ namespace VismaNetTokenGenerator
                           "</body>" +
                           "</html>",
                 ContentType = "text/html",
-                StatusCode = (int) status
+                StatusCode = (int)status
             };
         }
     }
